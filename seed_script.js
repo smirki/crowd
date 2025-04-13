@@ -68,6 +68,30 @@ const modelsToAdd = [
     { name: 'Qwen-Plus', provider: 'Qwen Team', knowledge_cutoff: 'Unknown', is_open_source: 0, availability: 'API', formats: null, huggingface_link: null },
     { name: 'Qwen-Turbo', provider: 'Qwen Team', knowledge_cutoff: 'Unknown', is_open_source: 0, availability: 'API', formats: null, huggingface_link: null },
     { name: 'Qwen2-VL-72B', provider: 'Qwen Team', knowledge_cutoff: 'Unknown', is_open_source: 1, availability: 'Download', formats: 'Original', huggingface_link: 'https://huggingface.co/Qwen/Qwen2-VL-72B' },
+    { name: 'Gemini-2.5-Pro-Exp-03-25', provider: 'Google', knowledge_cutoff: 'Unknown', is_open_source: 0, availability: 'API/Proprietary', formats: null, huggingface_link: null },
+    { name: 'ChatGPT-4o-latest (2025-03-26)', provider: 'OpenAI', knowledge_cutoff: 'Unknown', is_open_source: 0, availability: 'API/Proprietary', formats: null, huggingface_link: null },
+    { name: 'Grok-3-Preview-02-24', provider: 'xAI', knowledge_cutoff: 'Unknown', is_open_source: 0, availability: 'API/Proprietary', formats: null, huggingface_link: null },
+    { name: 'GPT-4.5-Preview', provider: 'OpenAI', knowledge_cutoff: 'Unknown', is_open_source: 0, availability: 'API/Proprietary', formats: null, huggingface_link: null },
+    { name: 'Gemini-2.0-Flash-Thinking-Exp-01-21', provider: 'Google', knowledge_cutoff: 'Unknown', is_open_source: 0, availability: 'API/Proprietary', formats: null, huggingface_link: null },
+    { name: 'Gemini-2.0-Pro-Exp-02-05', provider: 'Google', knowledge_cutoff: 'Unknown', is_open_source: 0, availability: 'API/Proprietary', formats: null, huggingface_link: null },
+    { name: 'DeepSeek-V3-0324', provider: 'DeepSeek', knowledge_cutoff: 'Unknown', is_open_source: 1, availability: 'Download', formats: 'Original,GGUF,AWQ,GPTQ', huggingface_link: null }, // MIT License -> open source = 1
+    { name: 'DeepSeek-R1', provider: 'DeepSeek', knowledge_cutoff: 'Unknown', is_open_source: 1, availability: 'Download', formats: 'Original,GGUF,AWQ,GPTQ', huggingface_link: null }, // MIT License -> open source = 1
+    { name: 'Gemini-2.0-Flash-001', provider: 'Google', knowledge_cutoff: 'Unknown', is_open_source: 0, availability: 'API/Proprietary', formats: null, huggingface_link: null },
+    { name: 'o1-2024-12-17', provider: 'OpenAI', knowledge_cutoff: 'Unknown', is_open_source: 0, availability: 'API/Proprietary', formats: null, huggingface_link: null },
+    { name: 'Gemma-3-27B-it', provider: 'Google', knowledge_cutoff: 'Unknown', is_open_source: 1, availability: 'Download', formats: 'Original,GGUF,AWQ,GPTQ', huggingface_link: null }, // Gemma License -> open source = 1 (usually)
+    { name: 'Qwen2.5-Max', provider: 'Alibaba', knowledge_cutoff: 'Unknown', is_open_source: 0, availability: 'API/Proprietary', formats: null, huggingface_link: null },
+    { name: 'o1-preview', provider: 'OpenAI', knowledge_cutoff: '2023/10', is_open_source: 0, availability: 'API/Proprietary', formats: null, huggingface_link: null },
+    { name: 'o3-mini-high', provider: 'OpenAI', knowledge_cutoff: 'Unknown', is_open_source: 0, availability: 'API/Proprietary', formats: null, huggingface_link: null },
+    { name: 'DeepSeek-V3', provider: 'DeepSeek', knowledge_cutoff: 'Unknown', is_open_source: 1, availability: 'Download', formats: 'Original,GGUF,AWQ,GPTQ', huggingface_link: null }, // DeepSeek License -> open source = 1
+    { name: 'QwQ-32B', provider: 'Alibaba', knowledge_cutoff: 'Unknown', is_open_source: 1, availability: 'Download', formats: 'Original,GGUF,AWQ,GPTQ', huggingface_link: null }, // Apache 2.0 License -> open source = 1
+    { name: 'GLM-4-Plus-0111', provider: 'Zhipu', knowledge_cutoff: 'Unknown', is_open_source: 0, availability: 'API/Proprietary', formats: null, huggingface_link: null },
+    { name: 'Gemini-2.0-Flash-Lite', provider: 'Google', knowledge_cutoff: 'Unknown', is_open_source: 0, availability: 'API/Proprietary', formats: null, huggingface_link: null },
+    { name: 'Qwen-Plus-0125', provider: 'Alibaba', knowledge_cutoff: 'Unknown', is_open_source: 0, availability: 'API/Proprietary', formats: null, huggingface_link: null },
+    { name: 'o3-mini', provider: 'OpenAI', knowledge_cutoff: 'Unknown', is_open_source: 0, availability: 'API/Proprietary', formats: null, huggingface_link: null },
+    { name: 'Command A (03-2025)', provider: 'Cohere', knowledge_cutoff: 'Unknown', is_open_source: 1, availability: 'Download', formats: 'Original,GGUF,AWQ,GPTQ', huggingface_link: null }, // CC-BY-NC-4.0 -> treated as open source = 1 here
+    { name: 'Step-2-16K-Exp', provider: 'StepFun', knowledge_cutoff: 'Unknown', is_open_source: 0, availability: 'API/Proprietary', formats: null, huggingface_link: null },
+    { name: 'o1-mini', provider: 'OpenAI', knowledge_cutoff: '2023/10', is_open_source: 0, availability: 'API/Proprietary', formats: null, huggingface_link: null },
+    { name: 'Claude 3.7 Sonnet (thinking-32k)', provider: 'Anthropic', knowledge_cutoff: 'Unknown', is_open_source: 0, availability: 'API/Proprietary', formats: null, huggingface_link: null }
 ];
 
 
@@ -114,6 +138,30 @@ const benchmarkScoresToAdd = [
     { modelName: 'Qwen2.5-Math-7B', benchShortName: 'GSM8K', score: 92.0, score_link: null },
     { modelName: 'Qwen2.5-Math-72B', benchShortName: 'GSM8K', score: 96.0, score_link: null },
     { modelName: 'Qwen2-VL-72B', benchShortName: 'MMLU Pro', score: 82.0, score_link: null },
+    { modelName: 'Gemini-2.5-Pro-Exp-03-25', benchShortName: 'Arena Elo', score: 1437, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'ChatGPT-4o-latest (2025-03-26)', benchShortName: 'Arena Elo', score: 1406, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'Grok-3-Preview-02-24', benchShortName: 'Arena Elo', score: 1402, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'GPT-4.5-Preview', benchShortName: 'Arena Elo', score: 1397, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'Gemini-2.0-Flash-Thinking-Exp-01-21', benchShortName: 'Arena Elo', score: 1380, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'Gemini-2.0-Pro-Exp-02-05', benchShortName: 'Arena Elo', score: 1380, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'DeepSeek-V3-0324', benchShortName: 'Arena Elo', score: 1370, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'DeepSeek-R1', benchShortName: 'Arena Elo', score: 1359, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'Gemini-2.0-Flash-001', benchShortName: 'Arena Elo', score: 1354, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'o1-2024-12-17', benchShortName: 'Arena Elo', score: 1350, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'Gemma-3-27B-it', benchShortName: 'Arena Elo', score: 1342, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'Qwen2.5-Max', benchShortName: 'Arena Elo', score: 1340, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'o1-preview', benchShortName: 'Arena Elo', score: 1335, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'o3-mini-high', benchShortName: 'Arena Elo', score: 1325, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'DeepSeek-V3', benchShortName: 'Arena Elo', score: 1318, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'QwQ-32B', benchShortName: 'Arena Elo', score: 1315, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'GLM-4-Plus-0111', benchShortName: 'Arena Elo', score: 1310, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'Gemini-2.0-Flash-Lite', benchShortName: 'Arena Elo', score: 1310, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'Qwen-Plus-0125', benchShortName: 'Arena Elo', score: 1310, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'o3-mini', benchShortName: 'Arena Elo', score: 1305, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'Command A (03-2025)', benchShortName: 'Arena Elo', score: 1305, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'Step-2-16K-Exp', benchShortName: 'Arena Elo', score: 1305, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'o1-mini', benchShortName: 'Arena Elo', score: 1304, score_link: 'https://chat.lmsys.org/' },
+    { modelName: 'Claude 3.7 Sonnet (thinking-32k)', benchShortName: 'Arena Elo', score: 1303, score_link: 'https://chat.lmsys.org/' }
 
     // ... Add scores for all relevant model/benchmark combinations
 ];
