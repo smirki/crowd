@@ -1,0 +1,31 @@
+<%- include('partials/header', { title: item ? 'Edit Benchmark' : 'Add Benchmark', currentPath: '/admin/benchmarks', error_msg: typeof error_msg !== 'undefined' ? error_msg : null }) %>
+
+<h2><%= item ? 'Edit Benchmark: ' + item.name : 'Add New Benchmark' %></h2>
+
+<form method="POST" action="<%= item ? '/admin/benchmarks/' + item.id + '/edit' : '/admin/benchmarks' %>">
+    <div>
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="name" value="<%= item ? item.name : '' %>" required maxlength="150">
+        <small>e.g., Massive Multitask Language Understanding Professional</small>
+    </div>
+    <div>
+        <label for="short_name">Short Name (for table headers):</label>
+        <input type="text" id="short_name" name="short_name" value="<%= item ? item.short_name : '' %>" required maxlength="50">
+        <small>e.g., MMLU Pro. Must be unique.</small>
+    </div>
+    <div>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"><%= item ? item.description : '' %></textarea>
+    </div>
+    <div>
+        <label for="source_url">Source URL:</label>
+        <input type="url" id="source_url" name="source_url" value="<%= item ? item.source_url : '' %>" placeholder="https://example.com/benchmark-paper">
+    </div>
+
+    <div class="form-actions">
+        <button type="submit"><%= item ? 'Update Benchmark' : 'Add Benchmark' %></button>
+        <a href="/admin/benchmarks">Cancel</a>
+    </div>
+</form>
+
+<%- include('partials/footer') %>

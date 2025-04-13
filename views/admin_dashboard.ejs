@@ -1,0 +1,14 @@
+<%- include('partials/header', { title: 'Dashboard', currentPath: '/admin' }) %>
+
+<h2>Admin Dashboard</h2>
+<p>Welcome to the Tesslate Ranker admin panel. Use the navigation above to manage models, use cases, benchmarks, and view suggestions.</p>
+
+<div class="download-section">
+    <h3>Database Management</h3>
+    <p>Download the current SQLite database file.</p>
+    <a href="/admin/download-db">
+        <button>Download Database (tesslate.db)</button>
+    </a>
+</div>
+
+<%- include('partials/footer') %>

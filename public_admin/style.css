@@ -1,0 +1,234 @@
+/* public_admin/style.css */
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 5px;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline-block;
+    margin: 0 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+nav ul li a:hover, nav ul li a.active {
+    background-color: #eee;
+}
+
+h2 {
+    color: #555;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    margin-top: 30px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+    vertical-align: top; /* Align top for score lists */
+}
+
+th {
+    background-color: #f9f9f9;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.actions a, .actions button {
+    margin-right: 8px;
+    display: inline-block; /* Prevent wrapping */
+    white-space: nowrap;
+}
+
+button, input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+button:hover, input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+button.delete {
+    background-color: #dc3545;
+}
+
+button.delete:hover {
+    background-color: #c82333;
+}
+
+button.add-new {
+     background-color: #28a745;
+     margin-bottom: 15px;
+}
+button.add-new:hover {
+    background-color: #218838;
+}
+
+
+form {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #eee;
+    background-color: #fdfdfd;
+    border-radius: 5px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="url"],
+form select,
+form textarea {
+    width: 98%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Include padding in width */
+}
+
+form textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+form input[type="checkbox"] {
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+form button[type="submit"] {
+    margin-top: 10px;
+}
+
+.form-actions {
+    margin-top: 20px;
+}
+
+.form-actions a {
+    margin-left: 15px;
+    color: #666;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 10px;
+    border: 1px solid #c3e6cb;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+
+.suggestion {
+    border: 1px solid #eee;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    background-color: #fff;
+}
+.suggestion p { margin: 5px 0; }
+.suggestion strong { color: #555; }
+.suggestion pre {
+     background-color: #f0f0f0;
+     padding: 10px;
+     border-radius: 4px;
+     white-space: pre-wrap; /* Wrap long lines */
+     word-wrap: break-word;
+     max-height: 200px;
+     overflow-y: auto;
+}
+
+.benchmark-scores { margin-top: 15px; }
+.benchmark-scores div { margin-bottom: 10px; display: flex; align-items: center; }
+.benchmark-scores label { margin-right: 10px; min-width: 120px; display: inline-block; }
+.benchmark-scores input[type="number"], .benchmark-scores input[type="url"] { width: 150px; margin-right: 10px; margin-bottom: 0; }
+.benchmark-scores input[type="url"] { width: 250px; } /* Wider URL field */
+
+
+.download-section {
+    text-align: center;
+    margin: 30px 0;
+    padding: 20px;
+    border-top: 1px solid #eee;
+}

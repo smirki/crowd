@@ -1,0 +1,12 @@
+<%- include('partials/header', { title: 'Error', currentPath: '' }) %>
+
+<h2>An Error Occurred</h2>
+<div class="error-message">
+    <p><%= message %></p>
+    <% if (error && error.stack) { %>
+        <pre style="margin-top: 15px; background-color: #eee; padding: 10px; border-radius: 4px; white-space: pre-wrap; word-wrap: break-word;"><%= error.stack %></pre>
+    <% } %>
+</div>
+<p><a href="/admin">Go to Dashboard</a></p>
+
+<%- include('partials/footer') %>

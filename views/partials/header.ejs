@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Tesslate Admin</title>
+    <link rel="stylesheet" href="/admin_static/style.css">
+</head>
+<body>
+    <header>
+        <h1>Tesslate Ranker Admin</h1>
+    </header>
+    <div class="container">
+        <nav>
+            <ul>
+                <li><a href="/admin" <%- currentPath === '/admin' ? 'class="active"' : '' %>>Dashboard</a></li>
+                <li><a href="/admin/models" <%- currentPath === '/admin/models' ? 'class="active"' : '' %>>Models</a></li>
+                <li><a href="/admin/usecases" <%- currentPath === '/admin/usecases' ? 'class="active"' : '' %>>Use Cases</a></li>
+                <li><a href="/admin/benchmarks" <%- currentPath === '/admin/benchmarks' ? 'class="active"' : '' %>>Benchmarks</a></li>
+                <li><a href="/admin/suggestions" <%- currentPath === '/admin/suggestions' ? 'class="active"' : '' %>>Suggestions</a></li>
+            </ul>
+        </nav>
+        <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+            <div class="success-message"><%= success_msg %></div>
+        <% } %>
+        <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+            <div class="error-message"><%= error_msg %></div>
+        <% } %>

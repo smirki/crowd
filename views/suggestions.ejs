@@ -1,0 +1,40 @@
+<%- include('partials/header', { title: 'Suggestions', currentPath: '/admin/suggestions' }) %>
+
+<h2>User Suggestions (<%= suggestions.length %>)</h2>
+<p>Review suggestions submitted by users. Add approve/reject functionality as needed.</p>
+
+<% if (suggestions.length > 0) { %>
+    <% suggestions.forEach(sug => { %>
+        <div class="suggestion">
+            <p><strong>ID:</strong> <%= sug.id %></p>
+            <p><strong>Type:</strong> <span style="text-transform: capitalize;"><%= sug.type.replace('_', ' ') %></span></p>
+            <p><strong>Submitted:</strong> <%= new Date(sug.submitted_at).toLocaleString() %></p>
+            <p><strong>Status:</strong> <%= sug.status %></p>
+            <% if (sug.name) { %>
+                <p><strong>Suggested Name:</strong> <%= sug.name %></p>
+            <% } %>
+            <p><strong>Details / Justification:</strong></p>
+            <pre><%= sug.details %></pre>
+
+            <!-- Example Status Update Buttons (requires backend routes)
+            <div class="suggestion-actions" style="margin-top: 10px;">
+                <form action="/admin/suggestions/<%= sug.id %>/status" method="POST" style="display: inline;">
+                    <input type="hidden" name="status" value="approved">
+                    <button type="submit" class="approve" style="background-color: #28a745;">Approve</button>
+                </form>
+                <form action="/admin/suggestions/<%= sug.id %>/status" method="POST" style="display: inline;">
+                    <input type="hidden" name="status" value="rejected">
+                    <button type="submit" class="reject" style="background-color: #ffc107; color: #333;">Reject</button>
+                </form>
+                 <form action="/admin/suggestions/<%= sug.id %>/delete" method="POST" style="display: inline;" onsubmit="return confirm('Delete suggestion <%= sug.id %>?');">
+                   <button type="submit" class="delete">Delete</button>
+                </form>
+            </div>
+            -->
+        </div>
+    <% }) %>
+<% } else { %>
+    <p>No suggestions submitted yet.</p>
+<% } %>
+
+<%- include('partials/footer') %>

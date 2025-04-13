@@ -1,0 +1,22 @@
+<%- include('partials/header', { title: item ? 'Edit Use Case' : 'Add Use Case', currentPath: '/admin/usecases', error_msg: typeof error_msg !== 'undefined' ? error_msg : null }) %>
+
+<h2><%= item ? 'Edit Use Case: ' + item.name : 'Add New Use Case' %></h2>
+
+<form method="POST" action="<%= item ? '/admin/usecases/' + item.id + '/edit' : '/admin/usecases' %>">
+    <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="<%= item ? item.name : '' %>" required maxlength="100">
+    </div>
+    <div>
+        <label for="slug">Slug (lowercase, use dashes):</label>
+        <input type="text" id="slug" name="slug" value="<%= item ? item.slug : '' %>" required maxlength="100" pattern="[a-z0-9-]+">
+        <small>Used in URLs, e.g., "web-development", "general-coding". Must be unique.</small>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit"><%= item ? 'Update Use Case' : 'Add Use Case' %></button>
+        <a href="/admin/usecases">Cancel</a>
+    </div>
+</form>
+
+<%- include('partials/footer') %>

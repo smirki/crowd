@@ -1,0 +1,61 @@
+<%- include('partials/header', { title: model ? 'Edit Model' : 'Add Model', currentPath: '/admin/models', error_msg: typeof error_msg !== 'undefined' ? error_msg : null }) %>
+
+<h2><%= model ? 'Edit Model: ' + model.name : 'Add New Model' %></h2>
+
+<form method="POST" action="<%= model ? '/admin/models/' + model.id + '/edit' : '/admin/models' %>">
+    <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="<%= model ? model.name : '' %>" required maxlength="150">
+    </div>
+    <div>
+        <label for="provider">Provider:</label>
+        <input type="text" id="provider" name="provider" value="<%= model ? model.provider : '' %>" maxlength="100">
+    </div>
+    <div>
+        <label for="huggingface_link">Hugging Face Link:</label>
+        <input type="url" id="huggingface_link" name="huggingface_link" value="<%= model ? model.huggingface_link : '' %>" placeholder="https://huggingface.co/...">
+    </div>
+    <div>
+        <label for="knowledge_cutoff">Knowledge Cutoff:</label>
+        <input type="text" id="knowledge_cutoff" name="knowledge_cutoff" value="<%= model ? model.knowledge_cutoff : '' %>" placeholder="e.g., 2023-12" maxlength="50">
+    </div>
+    <div>
+         <label for="is_open_source">
+            <input type="checkbox" id="is_open_source" name="is_open_source" value="1" <%= model && model.is_open_source ? 'checked' : '' %>>
+            Is Open Source
+         </label>
+    </div>
+    <div>
+        <label for="availability">Availability:</label>
+        <input type="text" id="availability" name="availability" value="<%= model ? model.availability : '' %>" placeholder="e.g., API, Download" maxlength="100">
+    </div>
+     <div>
+        <label for="formats">Formats (comma-separated):</label>
+        <input type="text" id="formats" name="formats" value="<%= model ? model.formats : '' %>" placeholder="e.g., GGUF,AWQ,GPTQ">
+    </div>
+
+    <% if (model) { %>
+        <h3>Benchmark Scores</h3>
+         <div class="benchmark-scores">
+             <% allBenchmarks.forEach(bench => {
+                  const existingScore = model.scores.find(s => s.benchmark_id === bench.id);
+             %>
+                 <div>
+                     <label for="score_<%= bench.id %>"><%= bench.short_name %>:</label>
+                     <input type="number" step="any" id="score_<%= bench.id %>" name="scores[<%= bench.id %>][score]" value="<%= existingScore ? existingScore.score : '' %>" placeholder="Score">
+                     <input type="url" id="score_link_<%= bench.id %>" name="scores[<%= bench.id %>][score_link]" value="<%= existingScore && existingScore.score_link ? existingScore.score_link : '' %>" placeholder="Optional Score Link">
+                 </div>
+             <% }) %>
+         </div>
+    <% } else { %>
+        <p><small>Benchmark scores can be added after the model is created.</small></p>
+    <% } %>
+
+
+    <div class="form-actions">
+        <button type="submit"><%= model ? 'Update Model' : 'Add Model' %></button>
+        <a href="/admin/models">Cancel</a>
+    </div>
+</form>
+
+<%- include('partials/footer') %>

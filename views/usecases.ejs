@@ -1,0 +1,35 @@
+<%- include('partials/header', { title: 'Use Cases', currentPath: '/admin/usecases', success_msg: typeof success_msg !== 'undefined' ? success_msg : null, error_msg: typeof error_msg !== 'undefined' ? error_msg : null }) %>
+
+<h2>Manage Use Cases (<%= items.length %>)</h2>
+<a href="/admin/usecases/new"><button class="add-new">Add New Use Case</button></a>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Slug</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% items.forEach(item => { %>
+            <tr>
+                <td><%= item.id %></td>
+                <td><%= item.name %></td>
+                <td><%= item.slug %></td>
+                <td class="actions">
+                    <a href="/admin/usecases/<%= item.id %>/edit"><button>Edit</button></a>
+                    <form action="/admin/usecases/<%= item.id %>/delete" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete use case: <%= item.name %>? This cannot be undone.');">
+                        <button type="submit" class="delete">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+        <% if (items.length === 0) { %>
+            <tr><td colspan="4">No use cases found.</td></tr>
+        <% } %>
+    </tbody>
+</table>
+
+<%- include('partials/footer') %>
