@@ -372,6 +372,6 @@ app.get('/', (req, res) => {
 // });
 
 // --- Start Server ---
-app.listen(PORT, () => {
+app.listen(3050, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
