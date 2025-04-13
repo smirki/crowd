@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tessellate Ranker - LLM Rankings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Tailwind gray-50 slightly adjusted */
+            color: #1f2937; /* Tailwind gray-800 */
+        }
+
+        /* Logo specific color */
+        .tessellate-logo path {
+            fill: #F97316; /* Tailwind orange-500 */
+        }
+
+        /* Scrollbar styling for pills */
+        .pills-container::-webkit-scrollbar { height: 6px; }
+        .pills-container::-webkit-scrollbar-track { background: #e5e7eb; border-radius: 10px; }
+        .pills-container::-webkit-scrollbar-thumb { background: #9ca3af; border-radius: 10px; }
+        .pills-container::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+
+        /* Table Wrapper & Scrolling */
+        .responsive-table-wrapper {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border: 1px solid #e5e7eb; /* gray-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05); /* subtle shadow */
+            background-color: white; /* Ensure background for table content */
+        }
+
+        /* Table Base */
+        table {
+            min-width: 1000px; /* Keep min-width for horizontal scroll */
+            width: 100%;
+            border-collapse: collapse; /* Ensures borders behave nicely */
+        }
+
+        /* Table Header */
+        th {
+            background-color: #f9fafb; /* gray-50 */
+            padding: 0.75rem 1rem; /* py-3 px-4 */
+            text-align: left;
+            font-size: 0.75rem; /* text-xs */
+            font-weight: 600; /* font-semibold */
+            color: #4b5563; /* gray-600 */
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 2px solid #e5e7eb; /* gray-200 */
+        }
+        th .sort-icon { margin-left: 4px; opacity: 0.4; font-size: 0.8em; vertical-align: middle; display: inline-block; transition: opacity 0.2s ease; }
+        th.sorted .sort-icon { opacity: 1; }
+        th.sortable:hover { background-color: #f3f4f6; /* gray-100 */ cursor: pointer; }
+        th.sortable:hover .sort-icon { opacity: 0.7; }
+
+        /* Table Body Cells */
+        td {
+            padding: 0.75rem 1rem; /* py-3 px-4 */
+            white-space: nowrap;
+            border-bottom: 1px solid #e5e7eb; /* gray-200 */
+            font-size: 0.875rem; /* text-sm */
+            vertical-align: middle; /* Align content vertically */
+        }
+        tbody tr:last-child td { border-bottom: 0; } /* Remove border from last row */
+        tbody tr:hover { background-color: #f9fafb; /* gray-50 */ } /* Row hover effect */
+
+        /* Vote Buttons */
+        .vote-button {
+            transition: transform 0.1s ease-in-out, color 0.2s ease-in-out;
+            color: #9ca3af; /* gray-400 */
+            background: none;
+            border: none;
+            padding: 0.25rem;
+            cursor: pointer;
+            border-radius: 50%; /* Make hover bg circular */
+        }
+        .vote-button:hover {
+             color: #6b7280; /* gray-500 */
+             background-color: #f3f4f6; /* gray-100 */
+        }
+        .vote-button:active { transform: scale(0.9); }
+        .vote-button.voted-up { color: #16a34a; /* green-600 */ }
+        .vote-button.voted-down { color: #dc2626; /* red-600 */ }
+        .vote-button.voted-up:hover { color: #15803d; background-color: #dcfce7; /* green-100 */}
+        .vote-button.voted-down:hover { color: #b91c1c; background-color: #fee2e2; /* red-100 */ }
+
+        /* Format Pills (using Tailwind classes directly where possible, but keeping this for JS compatibility) */
+        .format-pill {
+            display: inline-block;
+            background-color: #e0e7ff; /* indigo-100 */
+            color: #4338ca; /* indigo-700 */
+            font-size: 0.75rem; /* text-xs */
+            font-weight: 500; /* font-medium */
+            padding: 0.125rem 0.625rem; /* py-0.5 px-2.5 */
+            border-radius: 9999px; /* rounded-full */
+            margin-right: 0.25rem; /* mr-1 */
+            margin-bottom: 0.25rem; /* mb-1 */
+        }
+
+        /* FAB Button */
+        .fab {
+             transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease-in-out; /* Added bounce effect */
+        }
+        .fab:hover {
+            transform: scale(1.08);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1); /* Enhanced shadow */
+        }
+
+        /* Modal Styles */
+        .modal { display: none; position: fixed; z-index: 50; inset: 0; overflow-y: auto; }
+        .modal-overlay { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.5); transition: opacity 0.3s ease-in-out; backdrop-filter: blur(4px); /* Added blur effect */ }
+        .modal-content { position: relative; margin: 4rem auto; background-color: white; border-radius: 0.75rem; /* rounded-xl */ padding: 1.5rem; /* p-6 */ max-width: 500px; width: 90%; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* shadow-2xl */ transform: scale(0.95); opacity: 0; transition: transform 0.3s ease, opacity 0.3s ease; }
+        .modal.active .modal-content { transform: scale(1); opacity: 1; }
+        .modal-close-btn { position: absolute; top: 0.75rem; right: 0.75rem; background: none; border: none; font-size: 1.5rem; color: #9ca3af; cursor: pointer; line-height: 1; transition: color 0.2s ease; }
+        .modal-close-btn:hover { color: #1f2937; }
+        .modal.active { display: flex; align-items: center; justify-content: center; } /* Use flex for centering */
+
+        /* Pagination Controls */
+        .pagination-controls button, .pagination-controls span {
+            margin: 0 0.25rem;
+            padding: 0.5rem 0.75rem; /* Adjusted padding */
+            border: 1px solid #d1d5db; /* gray-300 */
+            background-color: white;
+            border-radius: 0.375rem; /* rounded-md */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* medium */
+            color: #374151; /* gray-700 */
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+            display: inline-flex; /* Ensure icons align */
+            align-items: center;
+        }
+        .pagination-controls button:hover:not(:disabled) {
+            background-color: #f9fafb; /* gray-50 */
+            border-color: #adb5bd; /* Slightly darker border on hover */
+            color: #1f2937; /* gray-800 */
+        }
+        .pagination-controls button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background-color: #f9fafb; /* Lighter disabled bg */
+        }
+        .pagination-controls .active-page {
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+            border-color: #3b82f6;
+            cursor: default;
+        }
+        .pagination-controls .ellipsis {
+            border: none;
+            background: none;
+            cursor: default;
+            padding: 0.5rem 0.25rem;
+            color: #6b7280; /* gray-500 */
+            font-weight: normal;
+        }
+
+        /* Use Case Pills Styling */
+        #usecase-pills .use-case-pill {
+            display: inline-block;
+            padding: 0.5rem 1rem; /* py-2 px-4 */
+            border-radius: 9999px; /* rounded-full */
+            background-color: white;
+            color: #374151; /* gray-700 */
+            border: 1px solid #d1d5db; /* gray-300 */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap; /* Prevent wrapping */
+            margin-bottom: 0.25rem; /* Add space for wrapping */
+        }
+        #usecase-pills .use-case-pill:hover {
+            background-color: #f3f4f6; /* gray-100 */
+            border-color: #9ca3af; /* gray-400 */
+        }
+        #usecase-pills .use-case-pill.active {
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+            border-color: #3b82f6;
+        }
+        #usecase-pills .use-case-pill.active:hover {
+             background-color: #2563eb; /* blue-600 */
+             border-color: #2563eb;
+        }
+
+        /* Utility for vertical alignment in table cells if needed */
+        .v-align-middle { vertical-align: middle; }
+
+        /* Better focus states */
+        input[type="search"]:focus, select:focus, input[type="text"]:focus, textarea:focus {
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #3b82f6; /* Ring effect like Tailwind Focus */
+            border-color: #3b82f6;
+        }
+        button:focus-visible { /* Modern focus indicator for buttons */
+             outline: 2px solid transparent;
+            outline-offset: 2px;
+            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #3b82f6; /* Ring effect like Tailwind Focus */
+        }
+
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-6 lg:p-8 max-w-7xl">
+        <header class="text-center mb-10 md:mb-12">
+             <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 flex items-center justify-center space-x-3">
+                <!-- Updated SVG Logo -->
+                <svg class="tessellate-logo w-8 h-8 md:w-10 md:h-10 inline-block" viewBox="0 0 658.14 509.11" xmlns="http://www.w3.org/2000/svg"><g><path d="m328.92.91h311.11c13.77,0,22.48,14.78,15.85,26.84-24.58,44.7-39.62,93.66-71.79,130.68-6.79,7.82-15.04,6.05-22.83,6.11-51.14.38-102.29.12-153.43.26-10.68.03-19.96.63-26.45-11.65-21.76-41.12-44.32-81.83-68.28-125.37-6.64-12.06,2.07-26.86,15.84-26.86Z" stroke-width="0"/><path d="m18.11,163.4c-13.77,0-22.48-14.79-15.84-26.86C25.46,94.43,47.81,54.04,69.53,13.32,75.65,1.85,83.89-.09,95.4,0c52.13.4,104.27.27,156.41.1,9.83-.03,18.26.13,23.97,10.76,22.29,41.53,45.02,82.83,68.54,125.71,6.62,12.06-2.1,26.83-15.86,26.83H18.11Z" stroke-width="0"/><path d="m344.41,217.54c-52.18,94.98-102.79,187.1-155.03,282.19-6.86,12.48-24.82,12.51-31.73.06-24.42-44.05-47.7-86.03-70.99-128-4.66-8.4,1.77-14.26,5.08-20.37,26.2-48.43,52.89-96.61,79.12-145.03,5.41-9.99,11.2-16.25,24.27-16.06,43.6.64,87.21.45,133.35.36,13.78-.03,22.56,14.77,15.92,26.85Z" stroke-width="0"/></g></svg>
+                <span>LLM Ranker</span>
+            </h1>
+            <p class="text-md md:text-lg text-gray-600">Crowd-Sourced LLM Rankings for Specific Use Cases</p>
+        </header>
+
+        <!-- Search Bar -->
+        <div class="mb-8">
+             <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 pointer-events-none">
+                    <i class="fas fa-search"></i>
+                </span>
+                <input type="search" id="search-input" placeholder="Search models by name, provider, or format (e.g., GGUF)..."
+                       class="w-full p-3 pl-11 pr-4 border border-gray-300 rounded-lg shadow-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-150 ease-in-out">
+            </div>
+        </div>
+
+        <!-- Use Case Pills -->
+        <div class="mb-8 p-4 bg-white rounded-lg shadow-sm border border-gray-200">
+            <h2 class="text-sm font-semibold text-gray-500 uppercase mb-3 tracking-wider">Select Use Case:</h2>
+            <div class="pills-container overflow-x-auto pb-2 -mb-2">
+                <div id="usecase-pills" class="flex space-x-2">
+                    <!-- Pills loaded by JS - Add 'use-case-pill' class in JS -->
+                    <span class="text-gray-500 italic px-4 py-2">Loading use cases...</span>
+                </div>
+            </div>
+        </div>
+
+         <!-- Loading / Error / No Results Area -->
+        <div id="status-area" class="text-center my-12 md:my-16">
+            <div id="loading-indicator" class="hidden">
+                 <i class="fas fa-spinner fa-spin text-blue-500 text-4xl"></i>
+                 <p class="text-gray-600 mt-3 text-lg">Loading models...</p>
+            </div>
+            <div id="error-message" class="text-red-700 bg-red-100 p-4 rounded-lg border border-red-300 hidden max-w-md mx-auto"></div>
+             <div id="no-results" class="text-gray-500 italic text-lg hidden">No models match your criteria for this use case.</div>
+             <div id="initial-message" class="text-gray-500 italic text-lg">Select a use case above to view rankings.</div>
+        </div>
+
+
+        <!-- Models Table -->
+        <div id="table-wrapper" class="hidden">
+            <div class="responsive-table-wrapper mb-6">
+                <table class="min-w-full">
+                    <thead id="models-thead">
+                        <!-- Table headers generated by JS - Apply styles via CSS -->
+                    </thead>
+                    <tbody id="models-tbody" class="bg-white">
+                        <!-- Model rows will be loaded here - Apply styles via CSS -->
+                    </tbody>
+                </table>
+            </div>
+             <!-- Pagination Controls -->
+            <nav id="pagination-controls" class="pagination-controls text-center py-4" aria-label="Table navigation">
+                <!-- Pagination buttons generated by JS -->
+            </nav>
+        </div>
+
+    </div>
+
+    <!-- Floating Action Button -->
+    <button id="fab" title="Suggest a Model or Use Case"
+            class="fab fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-3xl font-light focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-50 z-40">
+        +
+    </button>
+
+    <!-- Suggestion Modal -->
+    <div id="suggestion-modal" class="modal">
+        <div class="modal-overlay" id="modal-overlay" aria-hidden="true"></div>
+        <div class="modal-content">
+            <button class="modal-close-btn" id="modal-close-btn" aria-label="Close modal">×</button>
+            <h2 class="text-xl font-semibold mb-5 text-gray-800">Suggest a change or addition</h2>
+            <form id="suggestion-form">
+                <div class="mb-4">
+                    <label for="suggestion-type" class="block text-sm font-medium text-gray-700 mb-1">Type:</label>
+                    <select id="suggestion-type" name="type" required class="w-full p-2.5 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                        <option value="model">Model</option>
+                        <option value="use_case">Use Case</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="suggestion-name" class="block text-sm font-medium text-gray-700 mb-1">Name:</label>
+                    <input type="text" id="suggestion-name" name="name" required maxlength="150" placeholder="e.g., Llama 4 90B or 'Scientific Research'" class="w-full p-2.5 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                </div>
+                <div class="mb-4">
+                    <label for="suggestion-details" class="block text-sm font-medium text-gray-700 mb-1">Details / Justification:</label>
+                    <textarea id="suggestion-details" name="details" rows="4" required maxlength="1000" placeholder="Why should this be added? Provide links if possible (e.g., Hugging Face page, benchmark source)." class="w-full p-2.5 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"></textarea>
+                     <p class="text-xs text-gray-500 mt-1 text-right">Max 1000 characters.</p>
+                </div>
+                 <div id="suggestion-feedback" class="mb-4 text-sm min-h-[1.25rem]"></div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" id="modal-cancel-btn" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        Cancel
+                    </button>
+                    <button type="submit" id="suggestion-submit-btn" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition duration-150 ease-in-out">
+                        Submit Suggestion
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Placeholder for your script.js link or inline script
+        // Make sure your script.js adds the 'use-case-pill' class to the generated use case buttons/links
+        // e.g., buttonElement.classList.add('use-case-pill');
+        // And adds an 'active' class to the selected pill.
+        // e.g., buttonElement.classList.add('active');
+    </script>
+    <script src="script.js"></script> 
+</body>
+</html>
